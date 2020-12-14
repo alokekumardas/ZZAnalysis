@@ -323,7 +323,8 @@ class MyBatchManager:
        process.source.fileNames = cms.untracked.vstring('REPLACE_WITH_FILES') # splitComponents[value].files
 
        for fragment in pyFragments:
-           execfile('pyFragments/{0:s}'.format(fragment),variables)  
+           #execfile('pyFragments/{0:s}'.format(fragment),variables)  
+           execfile('../test/prod/pyFragments/{0:s}'.format(fragment),variables)  ###aloke
 
        # PDF step 1 case: create also a snippet to be used later in step 2 phase
        if splitComponents[value].pdfstep == 1:

@@ -1294,6 +1294,7 @@ void HZZ4lNtupleMaker::analyze(const edm::Event& event, const edm::EventSetup& e
   // Now we can write the variables for candidates
   int nFilled=0;
   for( edm::View<pat::CompositeCandidate>::const_iterator cand = cands->begin(); cand != cands->end(); ++cand) {
+    cout<<"aloke cand test"<<endl;
     if (failed) break; //don't waste time on this
     size_t icand= cand-cands->begin();
 
