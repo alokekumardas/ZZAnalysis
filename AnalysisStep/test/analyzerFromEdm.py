@@ -199,6 +199,7 @@ process.PlotsCREEEEos.candCollection     = 'CREEEEos'
 ### Analyzer for Trees
 ### ----------------------------------------------------------------------
 
+#TreeSetup = cms.EDAnalyzer("HZZ4lNtupleMaker",
 TreeSetup = cms.EDAnalyzer("HZZ4lNtupleMaker",
                                    channel = cms.untracked.string('aChannel'),
                                    CandCollection = cms.untracked.string('aCand'),
@@ -223,6 +224,15 @@ process.ZZ4eTree.CandCollection = 'EEEECand'
 process.ZZ2e2muTree = TreeSetup.clone()
 process.ZZ2e2muTree.channel = 'EEMM'
 process.ZZ2e2muTree.CandCollection = 'EEMMCand'
+
+#### aloke
+process.ZZ2e2qTree = TreeSetup.clone()
+process.ZZ2e2qTree.channel = 'EEQQ'
+process.ZZ2e2qTree.CandCollection = 'EEQQCand'
+
+process.ZZ2mu2qTree = TreeSetup.clone()
+process.ZZ2mu2qTree.channel = 'MMQQ'
+process.ZZ2mu2qTree.CandCollection = 'MMQQCand'
 
 ### Trees for control regions only
 TreeSetup.fileName = 'crTree' #No idea why we should change this...
@@ -298,6 +308,8 @@ process.dumpUserData =  cms.EDAnalyzer("dumpUserData",
         MMMM  = cms.InputTag("MMMMCand"),
         EEEE  = cms.InputTag("EEEECand"),
         EEMM  = cms.InputTag("EEMMCand"),
+        EEQQ  = cms.InputTag("EEQQCand"),
+        MMQQ  = cms.InputTag("MMQQCand"),
      )
 )
 
@@ -308,4 +320,6 @@ if (not IsMC):
 #process.p = cms.EndPath( process.Plots4mu + process.Plots4e + process.Plots2e2mu + process.PlotsCRZLL + process.PlotsCRZMM + process.PlotsCRZEE + process.PlotsCRZLLHiSIP + process.PlotsCRZLLHiSIPMM + process.PlotsCRZLLHiSIPKin + process.PlotsCRMMEEss + process.PlotsCREEMMss + process.PlotsCRMMMMss + process.PlotsCREEEEss + process.PlotsCRMMEEos + process.PlotsCREEMMos + process.PlotsCRMMMMos + process.PlotsCREEEEos )
 #process.trees = cms.EndPath( process.ZZ4muTree * process.ZZ4eTree * process.ZZ2e2muTree * process.CRZLLTree * process.CRZLLHiSIPTree * process.CRMMMMssTree * process.CREEEEssTree * process.CREEMMssTree * process.CRMMEEssTree * process.CRMMMMosTree * process.CREEEEosTree * process.CREEMMosTree * process.CRMMEEosTree + process.CRZLTree)
 
-process.trees = cms.EndPath(process.ZZ4muTree * process.ZZ4eTree * process.ZZ2e2muTree )
+#aloke FIXME
+#process.trees = cms.EndPath(process.ZZ4muTree * process.ZZ4eTree * process.ZZ2e2muTree )
+process.trees = cms.EndPath(process.ZZ2mu2qTree * process.ZZ2e2qTree )

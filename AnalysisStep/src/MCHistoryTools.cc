@@ -356,7 +356,32 @@ MCHistoryTools::init() {
   } else {
     theSortedGenLepts = theGenLeps;
   }
-  
+ 
+/////////////////////////////////////////
+for(View<reco::GenJet>::const_iterator genjet = jets->begin(); genjet != jets->end(); genjet++){
+    theGenJets.push_back(&* genjet);
+    std::vector<bool> dR_clean;
+    //for(unsigned i = 0; i < theSortedGenLepts.size(); ++i){
+      //float dR = deltaR(*theSortedGenLepts[i], *genjet);
+    for(unsigned i = 0; i < theGenLeps.size(); ++i){ //FIXME
+      float dR = deltaR(*theGenLeps[i], *genjet);
+      if(dR<0.4) dR_clean.push_back(false);
+      else dR_clean.push_back(true);
+    }
+    if (!(std::find(dR_clean.begin(), dR_clean.end(), false)!=dR_clean.end())){
+      theCleanedGenJets.push_back(&* genjet);
+    }
+  } //ATjets
+
+
+/////////////////
+
+
+
+
+
+
+ 
 
   isInit = true;
 
@@ -406,6 +431,50 @@ MCHistoryTools::genAcceptance(bool& gen_ZZ4lInEtaAcceptance, bool& gen_ZZ4lInEta
     if (nlInEtaAcceptance>=4) gen_ZZ4lInEtaAcceptance = true;
   }
 }
+/////////////////////////////////////////////////////
+
+void
+MCHistoryTools::genAcceptance_2l2q(bool& gen_ZZ2l2qInEtaAcceptance, bool& gen_ZZ2l2qInEtaPtAcceptance){
+  if (!ismc) return;  
+  init();
+
+//   float gen_mZ1 = -1.;
+//   float gen_mZ2 = -1.;
+//   int gen_Z1_flavour =0;
+//   int gen_Z2_flavour =0;
+
+  gen_ZZ2l2qInEtaAcceptance = false;
+  gen_ZZ2l2qInEtaPtAcceptance = false;
+ cout<<"number of lepton ="<<theGenLeps.size()<<"  gen jet size = "<<theGenJets.size()<<endl;
+  if (theGenLeps.size()==2 && theGenJets.size()==2) {
+//     gen_mZ1 = (theSortedGenLepts[0]->p4()+theSortedGenLepts[1]->p4()).mass();
+//     gen_mZ2 = (theSortedGenLepts[2]->p4()+theSortedGenLepts[3]->p4()).mass();
+//     gen_Z1_flavour = abs(theSortedGenLepts[0]->pdgId());
+//     gen_Z2_flavour = abs(theSortedGenLepts[1]->pdgId());
+
+    int nlInEtaAcceptance = 0;
+    int nlInEtaPtAcceptance = 0;
+
+//FIXME add genJet eta condition
+    for (unsigned int i=0; i<theGenLeps.size(); ++i){
+      float abseta =  fabs(theGenLeps[i]->eta());
+      int id = abs(theGenLeps[i]->pdgId());
+      //FIXME should take the 2 gen l with status 1
+      if ((id == 11 && theGenLeps[i]->pt() > 7. && abseta < 2.5) ||
+	  (id == 13 && theGenLeps[i]->pt() > 5. && abseta < 2.4)) { 
+	++nlInEtaPtAcceptance;
+      }
+      if ((id == 11 && abseta < 2.5) ||
+	  (id == 13 && abseta < 2.4)) { 
+	++nlInEtaAcceptance;
+      }
+    }
+    if (nlInEtaPtAcceptance>=2) gen_ZZ2l2qInEtaPtAcceptance = true;
+    if (nlInEtaAcceptance>=2) gen_ZZ2l2qInEtaAcceptance = true;
+  }
+}
+////////////////////////////////////////
+
 
 
 int
@@ -415,10 +484,12 @@ MCHistoryTools::genFinalState(){
 
   int gen_finalState = NONE;  
   int ifs=1;
+  int ifs_v2=1;
   if (theGenLeps.size()==4){
     for (int i=0; i<4; ++i) {
       ifs*=theGenLeps[i]->pdgId();
     }
+
 
     // FIXME this does not make much sense now that we re-pair Zs in the MC history.
     if (ifs==14641) {
@@ -449,6 +520,18 @@ MCHistoryTools::genFinalState(){
       return NONE;
     }
   }
+
+  if (theGenLeps.size()==2){
+    for (int i=0; i<2; ++i) {
+      ifs_v2*=theGenLeps[i]->pdgId();
+    }
+  if(ifs_v2==121){
+    gen_finalState = EEQQ;
+	} else if(ifs_v2==169){
+   gen_finalState = MMQQ;
+   }
+   }
+
   return gen_finalState;
 }
 

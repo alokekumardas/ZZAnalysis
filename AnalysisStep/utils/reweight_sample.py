@@ -77,6 +77,8 @@ def main(options):
 	hGenZZMass_4e = f.Get("PlotsZZ/hGenZZMass_4e").Clone()
 	hGenZZMass_4mu = f.Get("PlotsZZ/hGenZZMass_4mu").Clone()
 	hGenZZMass_2e2mu = f.Get("PlotsZZ/hGenZZMass_2e2mu").Clone()
+	hGenZZMass_2e2q = f.Get("PlotsZZ/hGenZZMass_2e2q").Clone()
+	hGenZZMass_2mu2q = f.Get("PlotsZZ/hGenZZMass_2mu2q").Clone()
 	hGenZZMass_2l2tau = f.Get("PlotsZZ/hGenZZMass_2l2tau").Clone()
 	MCPU_rw.Write()
 

@@ -15,6 +15,19 @@
 #include <DataFormats/HepMCCandidate/interface/GenParticleFwd.h>
 #include <SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h>
 
+//ATjets Additional libraries for GenJet variables
+#include <DataFormats/PatCandidates/interface/Jet.h>
+#include <CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h>
+#include <CondFormats/JetMETObjects/interface/JetCorrectorParameters.h>
+#include <JetMETCorrections/Objects/interface/JetCorrectionsRecord.h>
+#include <JetMETCorrections/Modules/interface/JetResolution.h>
+#include "DataFormats/JetReco/interface/GenJet.h"
+#include "PhysicsTools/JetMCUtils/interface/JetMCTag.h"
+#include "PhysicsTools/JetMCUtils/interface/CandMCTag.h"
+
+
+
+
 #include <vector>
 #include <string>
 
@@ -37,6 +50,7 @@ class MCHistoryTools {
   /// ZZ4lInEtaAcceptance = eta cut on the 4 leptons (from the direct Z daughter)
   /// ZZ4lInEtaPtAcceptance = eta, pt cuts on the 4 leptons (from the direct Z daughter)
   void genAcceptance(bool& gen_ZZ4lInEtaAcceptance, bool& gen_ZZ4lInEtaPtAcceptance);
+  void genAcceptance_2l2q(bool& gen_ZZ2l2qInEtaAcceptance, bool& gen_ZZ2l2qInEtaPtAcceptance);
 
   const reco::Candidate * genH() {init(); return theGenH;}
 
@@ -57,7 +71,9 @@ class MCHistoryTools {
 
   /// The FSR photons
   const std::vector<const reco::Candidate *>& genFSR() {init(); return theGenFSR;}
-
+//aloke jets
+  const std::vector<const reco::GenJet *>& GenJets() {init(); return theGenJets;}
+  const std::vector<const reco::GenJet *>& GenCleanedJets() {init(); return theCleanedGenJets;}
   /// Find the actual lepton parent (first parent in MC history with a different pdgID)
   const reco::GenParticle* getParent(const reco::GenParticle* genLep);
 
@@ -88,6 +104,7 @@ class MCHistoryTools {
 
  private:
   edm::Handle<edm::View<reco::Candidate> > particles;
+  edm::Handle<edm::View<reco::GenJet> > jets;
   bool ismc;
   unsigned int processID;
   float hepMCweight;
@@ -100,7 +117,8 @@ class MCHistoryTools {
   std::vector<const reco::Candidate *> theSortedGenLepts;
   std::vector<const reco::Candidate *> theAssociatedLeps;
   std::vector<const reco::Candidate *> theGenFSR;
-  
+  std::vector<const reco::GenJet *> theGenJets;
+  std::vector<const reco::GenJet *> theCleanedGenJets;
   void init();
 
 };
