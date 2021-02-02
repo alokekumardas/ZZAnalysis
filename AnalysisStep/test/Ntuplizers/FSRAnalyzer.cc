@@ -23,6 +23,14 @@
 #include <iostream>
 #include <typeinfo>
 
+#include <DataFormats/PatCandidates/interface/Jet.h>
+#include <CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h>
+#include <CondFormats/JetMETObjects/interface/JetCorrectorParameters.h>
+#include <JetMETCorrections/Objects/interface/JetCorrectionsRecord.h>
+#include <JetMETCorrections/Modules/interface/JetResolution.h>
+
+
+
 //bool debug = true;
 
 class FSRAnalyzer : public edm::EDAnalyzer {
@@ -46,7 +54,7 @@ class FSRAnalyzer : public edm::EDAnalyzer {
   edm::EDGetTokenT<std::vector<reco::Vertex> > vtxToken;
   edm::EDGetTokenT<edm::View<reco::Candidate> > genParticleToken;
   edm::EDGetTokenT<GenEventInfoProduct> genInfoToken;
-
+  edm::EDGetTokenT<edm::View<reco::GenJet> > genJetsToken; 
 };
 
 FSRAnalyzer::FSRAnalyzer(const edm::ParameterSet& pset)
@@ -57,6 +65,7 @@ FSRAnalyzer::FSRAnalyzer(const edm::ParameterSet& pset)
   vtxToken = consumes<std::vector<reco::Vertex> >(edm::InputTag("goodPrimaryVertices"));
   genParticleToken = consumes<edm::View<reco::Candidate> >( edm::InputTag("prunedGenParticles"));
   genInfoToken = consumes<GenEventInfoProduct>( edm::InputTag("generator"));
+  genJetsToken = consumes<edm::View<reco::GenJet> >(edm::InputTag("slimmedGenJets"));
 }
 
 FSRAnalyzer::~FSRAnalyzer(){}
@@ -105,8 +114,11 @@ FSRAnalyzer::analyze(const edm::Event & event, const edm::EventSetup& eventSetup
   event.getByToken(genParticleToken, genParticles);
   edm::Handle<GenEventInfoProduct> genInfo;
   event.getByToken(genInfoToken, genInfo);
+  edm::Handle<edm::View<reco::GenJet> > genJets;
+  event.getByToken(genJetsToken, genJets);
   
-  MCHistoryTools mch(event, "", genParticles, genInfo);
+  //MCHistoryTools mch(event, "", genParticles, genInfo);
+  MCHistoryTools mch(event, "", genParticles, genInfo, genJets, false);
   // These are all gen FSR photons coming from leptons from the H
   vector<const reco::Candidate *> genFSR = mch.genFSR();
   //  vector<const reco::Candidate *> genLep = mch.genZLeps();

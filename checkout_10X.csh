@@ -77,8 +77,9 @@ git clone https://github.com/cms-analysis/HiggsAnalysis-ZZMatrixElement.git ZZMa
 )
 
 #kinematic refitting
-git clone https://github.com/mhl0116/KinZfitter-1.git KinZfitter
-(cd KinZfitter ; git checkout -b from-27daebb 27daebb)
+#git clone https://github.com/mhl0116/KinZfitter-1.git KinZfitter
+git clone  https://github.com/alokekumardas/KinZfitter.git  KinZfitter
+(cd KinZfitter ; git checkout -b 2l2q_fullrun2)
 
 
 

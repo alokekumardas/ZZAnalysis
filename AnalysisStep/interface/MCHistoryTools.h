@@ -25,16 +25,13 @@
 #include "PhysicsTools/JetMCUtils/interface/JetMCTag.h"
 #include "PhysicsTools/JetMCUtils/interface/CandMCTag.h"
 
-
-
-
 #include <vector>
 #include <string>
 
 class MCHistoryTools {
  public:
   /// Constructor
-  MCHistoryTools(const edm::Event & event, std::string sampleName, edm::Handle<edm::View<reco::Candidate> > & genParticles, edm::Handle<GenEventInfoProduct> & genInfo);
+  MCHistoryTools(const edm::Event & event, std::string sampleName, edm::Handle<edm::View<reco::Candidate> > & genParticles, edm::Handle<GenEventInfoProduct> & genInfo, edm::Handle<edm::View<reco::GenJet> > & genJets, bool fourLep);
 
   /// Destructor
   virtual ~MCHistoryTools();
@@ -71,9 +68,9 @@ class MCHistoryTools {
 
   /// The FSR photons
   const std::vector<const reco::Candidate *>& genFSR() {init(); return theGenFSR;}
-//aloke jets
+// GenJets
   const std::vector<const reco::GenJet *>& GenJets() {init(); return theGenJets;}
-  const std::vector<const reco::GenJet *>& GenCleanedJets() {init(); return theCleanedGenJets;}
+
   /// Find the actual lepton parent (first parent in MC history with a different pdgID)
   const reco::GenParticle* getParent(const reco::GenParticle* genLep);
 
@@ -104,8 +101,9 @@ class MCHistoryTools {
 
  private:
   edm::Handle<edm::View<reco::Candidate> > particles;
-  edm::Handle<edm::View<reco::GenJet> > jets;
+  edm::Handle<edm::View<reco::GenJet> > jets; //ATjets
   bool ismc;
+  bool is4L;
   unsigned int processID;
   float hepMCweight;
   
@@ -114,11 +112,11 @@ class MCHistoryTools {
   std::vector<const reco::Candidate *> theGenZ;
   std::vector<const reco::Candidate *> theAssociatedV;
   std::vector<const reco::Candidate *> theGenLeps;
+  std::vector<const reco::GenJet *>    theGenJets; //ATjets
   std::vector<const reco::Candidate *> theSortedGenLepts;
   std::vector<const reco::Candidate *> theAssociatedLeps;
   std::vector<const reco::Candidate *> theGenFSR;
-  std::vector<const reco::GenJet *> theGenJets;
-  std::vector<const reco::GenJet *> theCleanedGenJets;
+  
   void init();
 
 };

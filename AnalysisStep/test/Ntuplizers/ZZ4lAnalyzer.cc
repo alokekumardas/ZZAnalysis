@@ -30,6 +30,12 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include <FWCore/ParameterSet/interface/FileInPath.h>
 
+#include <DataFormats/PatCandidates/interface/Jet.h>
+#include <CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h>
+#include <CondFormats/JetMETObjects/interface/JetCorrectorParameters.h>
+#include <JetMETCorrections/Objects/interface/JetCorrectionsRecord.h>
+#include <JetMETCorrections/Modules/interface/JetResolution.h>
+
 
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include <DataFormats/Common/interface/MergeableCounter.h>
@@ -176,6 +182,7 @@ private:
   edm::EDGetTokenT<double> rhoToken;
   edm::EDGetTokenT<edm::View<reco::Candidate> > genParticleToken;
   edm::EDGetTokenT<GenEventInfoProduct> genInfoToken;
+  edm::EDGetTokenT<edm::View<reco::GenJet> > genJetsToken;
   //edm::EDGetTokenT<edm::View<pat::Jet> > jetToken;
   edm::EDGetTokenT<edm::TriggerResults> triggerResultToken;
   edm::EDGetTokenT<edm::View<reco::Candidate> > softLeptonToken;
@@ -220,6 +227,7 @@ ZZ4lAnalyzer::ZZ4lAnalyzer(const ParameterSet& pset) :
   rhoToken = consumes<double>(edm::InputTag("fixedGridRhoFastjetAll",""));
   genParticleToken = consumes<edm::View<reco::Candidate> >( edm::InputTag("prunedGenParticles"));
   genInfoToken = consumes<GenEventInfoProduct>( edm::InputTag("generator"));
+  genJetsToken = consumes<edm::View<reco::GenJet> >(edm::InputTag("slimmedGenJets"));
   consumesMany<std::vector< PileupSummaryInfo > >();
   //jetToken = consumes<edm::View<pat::Jet> >(edm::InputTag("cleanJets"));
   triggerResultToken = consumes<edm::TriggerResults>(edm::InputTag("TriggerResults"));
@@ -405,8 +413,11 @@ void ZZ4lAnalyzer::analyze(const Event & event, const EventSetup& eventSetup){
     event.getByToken(genParticleToken, genParticles);
     edm::Handle<GenEventInfoProduct> genInfo;
     event.getByToken(genInfoToken, genInfo);
+    edm::Handle<edm::View<reco::GenJet> > genJets; //ATjets
+    event.getByToken(genJetsToken, genJets); //ATjets
 
-    MCHistoryTools mch(event, sampleName, genParticles, genInfo);
+    //MCHistoryTools mch(event, sampleName, genParticles, genInfo);
+    MCHistoryTools mch(event, sampleName, genParticles, genInfo, genJets, false);
     genFinalState = mch.genFinalState();
 
     const reco::Candidate* genH = mch.genH();
