@@ -8,11 +8,11 @@
 # ${TMPDIR}/checkout_10X.csh
 
 ############## For CMSSW_10_2_18
-#git cms-init
+git cms-init
 
 #Preliminary electron scale and smearing corrections according to https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes#2018_Preliminary_Energy_Correcti
 #We need the ElectronTools package to calculate smear and scale uncertainties so just download the ScaleAndSmearing files manualy 
-#git cms-merge-topic cms-egamma:EgammaPostRecoTools
+git cms-merge-topic cms-egamma:EgammaPostRecoTools
 git cms-merge-topic cms-egamma:PhotonIDValueMapSpeedup1029
 git cms-merge-topic cms-egamma:slava77-btvDictFix_10210
 git cms-addpkg EgammaAnalysis/ElectronTools
